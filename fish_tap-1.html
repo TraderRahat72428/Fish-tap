@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Fish Tap</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(160deg,#071a2e,#0b5275);color:#fff;min-height:100vh;display:flex;justify-content:center}
+.app{width:100%;max-width:430px;padding:28px 20px;text-align:center}
+h1{margin:8px 0 4px;font-size:32px}
+.sub{opacity:.8;margin-bottom:24px}
+.balance{font-size:42px;font-weight:800;margin:10px 0}
+.coin{font-size:20px;opacity:.85}
+.tap{width:230px;height:230px;border-radius:50%;border:0;background:rgba(255,255,255,.12);box-shadow:0 15px 40px rgba(0,0,0,.3),inset 0 0 0 8px rgba(255,255,255,.08);font-size:100px;cursor:pointer;transition:.08s}
+.tap:active{transform:scale(.94)}
+.stats{display:flex;justify-content:space-between;margin:28px 4px 8px;font-size:15px}
+.bar{height:12px;background:rgba(255,255,255,.15);border-radius:20px;overflow:hidden}
+.fill{height:100%;width:0%;background:#fff;border-radius:20px;transition:.15s}
+.msg{margin-top:18px;min-height:22px;opacity:.9}
+.reset{margin-top:15px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:10px;padding:9px 15px}
+</style>
+</head>
+<body>
+<div class="app">
+  <h1>🐟 Fish Tap</h1>
+  <div class="sub">Tap the fish and collect Fish!</div>
+  <div class="balance" id="balance">0</div>
+  <div class="coin">Fish</div>
+
+  <div style="margin:30px 0">
+    <button class="tap" id="tap">🐟</button>
+  </div>
+
+  <div class="stats">
+    <span id="count">0 / 10,000 taps</span>
+    <span id="percent">0%</span>
+  </div>
+  <div class="bar"><div class="fill" id="fill"></div></div>
+  <div class="msg" id="msg">Tap the fish to start.</div>
+  <button class="reset" id="reset">Reset demo</button>
+</div>
+
+<script>
+const MAX_TAPS = 10000;
+const PER_TAP = 5;
+let taps = Number(localStorage.getItem("fish_taps") || 0);
+
+const balance = document.getElementById("balance");
+const count = document.getElementById("count");
+const percent = document.getElementById("percent");
+const fill = document.getElementById("fill");
+const msg = document.getElementById("msg");
+
+function update(){
+  const p = taps / MAX_TAPS * 100;
+  balance.textContent = (taps * PER_TAP).toLocaleString();
+  count.textContent = `${taps.toLocaleString()} / ${MAX_TAPS.toLocaleString()} taps`;
+  percent.textContent = `${p.toFixed(1)}%`;
+  fill.style.width = p + "%";
+}
+document.getElementById("tap").onclick = () => {
+  if(taps >= MAX_TAPS){
+    msg.textContent = "Tap limit reached!";
+    return;
+  }
+  taps++;
+  localStorage.setItem("fish_taps", taps);
+  update();
+  msg.textContent = "+5 Fish 🐟";
+};
+document.getElementById("reset").onclick = () => {
+  taps = 0;
+  localStorage.setItem("fish_taps", taps);
+  msg.textContent = "Demo reset.";
+  update();
+};
+update();
+</script>
+</body>
+</html>
