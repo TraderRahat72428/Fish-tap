@@ -40,32 +40,28 @@ h1{margin:8px 0 4px;font-size:32px}
   <div class="msg" id="msg">Tap the fish to start.</div>
   <button class="reset" id="reset">Reset demo</button>
 </div>
-
 <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyCYnd_QlBSsrWjGx39LYKkY0ppTQDZrgxw",
-    authDomain: "fish-tap-543d5.firebaseapp.com",
-    projectId: "fish-tap-543d5",
-    storageBucket: "fish-tap-543d5.firebasestorage.app",
-    messagingSenderId: "752466298011",
-    appId: "1:752466298011:web:13b4fe9757eb0641fa723e",
-    measurementId: "G-NJHT21EMFE"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCndyQIBSSRwjGX3YlKkYQ0pTQDRzxw",
+  authDomain: "fish-tap-543d5.firebaseapp.com",
+  projectId: "fish-tap-543d5",
+  storageBucket: "fish-tap-543d5.firebasestorage.app",
+  messagingSenderId: "752466298011",
+  appId: "1:752466298011:web:13bf4e9757eb0641fa723e",
+  measurementId: "G-NJTH21EMFE"
+};
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
 const MAX_TAPS = 10000;
 const PER_TAP = 5;
+
 let taps = Number(localStorage.getItem("fish_taps") || 0);
 
 const balance = document.getElementById("balance");
@@ -74,30 +70,80 @@ const percent = document.getElementById("percent");
 const fill = document.getElementById("fill");
 const msg = document.getElementById("msg");
 
-function update(){
+function update() {
   const p = taps / MAX_TAPS * 100;
+
   balance.textContent = (taps * PER_TAP).toLocaleString();
   count.textContent = `${taps.toLocaleString()} / ${MAX_TAPS.toLocaleString()} taps`;
   percent.textContent = `${p.toFixed(1)}%`;
   fill.style.width = p + "%";
 }
-document.getElementById("tap").onclick = () => {
-  if(taps >= MAX_TAPS){
+
+async function saveData() {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  await setDoc(
+    doc(db, "players", user.uid),
+    {
+      taps: taps,
+      balance: taps * PER_TAP
+    },
+    { merge: true }
+  );
+}
+
+async function loadData() {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const snap = await getDoc(doc(db, "players", user.uid));
+
+  if (snap.exists()) {
+    const data = snap.data();
+    taps = Number(data.taps || 0);
+    localStorage.setItem("fish_taps", taps);
+  }
+
+  update();
+}
+
+document.getElementById("tap").onclick = async () => {
+
+  if (taps >= MAX_TAPS) {
     msg.textContent = "Tap limit reached!";
     return;
   }
+
   taps++;
+
   localStorage.setItem("fish_taps", taps);
+
   update();
+
   msg.textContent = "+5 Fish 🐟";
+
+  await saveData();
 };
-document.getElementById("reset").onclick = () => {
+
+document.getElementById("reset").onclick = async () => {
   taps = 0;
+
   localStorage.setItem("fish_taps", taps);
-  msg.textContent = "Demo reset.";
+
   update();
+
+  msg.textContent = "Demo reset.";
+
+  await saveData();
 };
+
+signInAnonymously(auth)
+  .then(() => loadData())
+  .catch((error) => {
+    console.error(error);
+    msg.textContent = "Firebase connection error";
+  });
+
 update();
 </script>
-</body>
-</html>
