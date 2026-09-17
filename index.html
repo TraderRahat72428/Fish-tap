@@ -2,148 +2,612 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Fish Tap</title>
+
 <style>
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(160deg,#071a2e,#0b5275);color:#fff;min-height:100vh;display:flex;justify-content:center}
-.app{width:100%;max-width:430px;padding:28px 20px;text-align:center}
-h1{margin:8px 0 4px;font-size:32px}
-.sub{opacity:.8;margin-bottom:24px}
-.balance{font-size:42px;font-weight:800;margin:10px 0}
-.coin{font-size:20px;opacity:.85}
-.tap{width:230px;height:230px;border-radius:50%;border:0;background:rgba(255,255,255,.12);box-shadow:0 15px 40px rgba(0,0,0,.3),inset 0 0 0 8px rgba(255,255,255,.08);font-size:100px;cursor:pointer;transition:.08s}
-.tap:active{transform:scale(.94)}
-.stats{display:flex;justify-content:space-between;margin:28px 4px 8px;font-size:15px}
-.bar{height:12px;background:rgba(255,255,255,.15);border-radius:20px;overflow:hidden}
-.fill{height:100%;width:0%;background:#fff;border-radius:20px;transition:.15s}
-.msg{margin-top:18px;min-height:22px;opacity:.9}
-.reset{margin-top:15px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;border-radius:10px;padding:9px 15px}
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(160deg,#071a2e,#0b5275);
+  color:white;
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+}
+
+.app{
+  width:100%;
+  max-width:430px;
+  padding:28px 20px;
+  text-align:center;
+}
+
+h1{
+  margin:8px 0 4px;
+  font-size:32px;
+}
+
+.sub{
+  opacity:.8;
+  margin-bottom:24px;
+}
+
+.balance{
+  font-size:42px;
+  font-weight:800;
+  margin:10px 0;
+}
+
+.coin{
+  font-size:20px;
+  opacity:.85;
+}
+
+.tap{
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  border:0;
+  background:rgba(255,255,255,.12);
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.3),
+    inset 0 0 0 8px rgba(255,255,255,.08);
+  font-size:100px;
+  cursor:pointer;
+  transition:.08s;
+}
+
+.tap:active{
+  transform:scale(.94);
+}
+
+.stats{
+  display:flex;
+  justify-content:space-between;
+  margin:28px 4px 8px;
+  font-size:15px;
+}
+
+.bar{
+  height:12px;
+  background:rgba(255,255,255,.15);
+  border-radius:20px;
+  overflow:hidden;
+}
+
+.fill{
+  height:100%;
+  width:0%;
+  background:white;
+  border-radius:20px;
+  transition:.15s;
+}
+
+.msg{
+  margin-top:18px;
+  min-height:22px;
+  opacity:.9;
+}
+
+.refbox{
+  margin-top:24px;
+  padding:18px;
+  border-radius:16px;
+  background:rgba(255,255,255,.10);
+}
+
+.refbox h2{
+  margin:0 0 8px;
+  font-size:21px;
+}
+
+.refbox p{
+  margin:6px 0 12px;
+  opacity:.85;
+}
+
+.refcount{
+  font-size:18px;
+  font-weight:700;
+  margin:8px;
+}
+
+.refrow{
+  display:flex;
+  gap:8px;
+}
+
+.refrow input{
+  flex:1;
+  min-width:0;
+  padding:11px;
+  border:0;
+  border-radius:9px;
+  background:white;
+  color:#111;
+  font-size:13px;
+}
+
+.refrow button,
+.reset{
+  border:0;
+  border-radius:9px;
+  padding:10px 13px;
+  cursor:pointer;
+}
+
+.refrow button{
+  background:white;
+}
+
+.reset{
+  margin-top:15px;
+  border:1px solid rgba(255,255,255,.3);
+  background:transparent;
+  color:white;
+}
 </style>
 </head>
+
 <body>
+
 <div class="app">
+
   <h1>🐟 Fish Tap</h1>
-  <div class="sub">Tap the fish and collect Fish!</div>
-  <div class="balance" id="balance">0</div>
-  <div class="coin">Fish</div>
+
+  <div class="sub">
+    Tap the fish and collect Fish!
+  </div>
+
+  <div class="balance" id="balance">
+    0
+  </div>
+
+  <div class="coin">
+    Fish
+  </div>
 
   <div style="margin:30px 0">
-    <button class="tap" id="tap">🐟</button>
+
+    <button class="tap" id="tap">
+      🐟
+    </button>
+
   </div>
 
   <div class="stats">
-    <span id="count">0 / 10,000 taps</span>
-    <span id="percent">0%</span>
+
+    <span id="count">
+      0 / 10,000 taps
+    </span>
+
+    <span id="percent">
+      0%
+    </span>
+
   </div>
-  <div class="bar"><div class="fill" id="fill"></div></div>
-  <div class="msg" id="msg">Tap the fish to start.</div>
-  <button class="reset" id="reset">Reset demo</button>
+
+  <div class="bar">
+    <div class="fill" id="fill"></div>
+  </div>
+
+  <div class="msg" id="msg">
+    Tap the fish to start.
+  </div>
+
+
+  <!-- REFER & EARN -->
+
+  <div class="refbox">
+
+    <h2>
+      👥 Refer & Earn
+    </h2>
+
+    <p>
+      বন্ধুদের invite করুন এবং referral bonus পান!
+    </p>
+
+    <div class="refcount">
+
+      Your Referrals:
+      <span id="refCount">
+        0
+      </span>
+
+    </div>
+
+    <div class="refrow">
+
+      <input
+        id="refLink"
+        readonly
+        placeholder="Referral link"
+      >
+
+      <button id="copyRef">
+        Copy
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <button class="reset" id="reset">
+    Reset demo
+  </button>
+
 </div>
+
+
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
-import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+import {
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+import {
+  getAuth,
+  signInAnonymously
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCndyQIBSSRwjGX3YlKkYQ0pTQDRzxw",
-  authDomain: "fish-tap-543d5.firebaseapp.com",
-  projectId: "fish-tap-543d5",
-  storageBucket: "fish-tap-543d5.firebasestorage.app",
-  messagingSenderId: "752466298011",
-  appId: "1:752466298011:web:13bf4e9757eb0641fa723e",
-  measurementId: "G-NJTH21EMFE"
+
+  apiKey:
+    "AIzaSyCndyQIBSSRwjGX3YlKkYQ0pTQDRzxw",
+
+  authDomain:
+    "fish-tap-543d5.firebaseapp.com",
+
+  projectId:
+    "fish-tap-543d5",
+
+  storageBucket:
+    "fish-tap-543d5.firebasestorage.app",
+
+  messagingSenderId:
+    "752466298011",
+
+  appId:
+    "1:752466298011:web:13bf4e9757eb0641fa723e",
+
+  measurementId:
+    "G-NJTH21EMFE"
+
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+
+const app =
+  initializeApp(firebaseConfig);
+
+const auth =
+  getAuth(app);
+
+const db =
+  getFirestore(app);
+
+
+/* SETTINGS */
 
 const MAX_TAPS = 10000;
+
 const PER_TAP = 5;
 
-let taps = Number(localStorage.getItem("fish_taps") || 0);
 
-const balance = document.getElementById("balance");
-const count = document.getElementById("count");
-const percent = document.getElementById("percent");
-const fill = document.getElementById("fill");
-const msg = document.getElementById("msg");
+/* DATA */
 
-function update() {
-  const p = taps / MAX_TAPS * 100;
+let taps =
+  Number(
+    localStorage.getItem("fish_taps") || 0
+  );
 
-  balance.textContent = (taps * PER_TAP).toLocaleString();
-  count.textContent = `${taps.toLocaleString()} / ${MAX_TAPS.toLocaleString()} taps`;
-  percent.textContent = `${p.toFixed(1)}%`;
-  fill.style.width = p + "%";
+let referrals =
+  Number(
+    localStorage.getItem("fish_referrals") || 0
+  );
+
+
+/* ELEMENTS */
+
+const balance =
+  document.getElementById("balance");
+
+const count =
+  document.getElementById("count");
+
+const percent =
+  document.getElementById("percent");
+
+const fill =
+  document.getElementById("fill");
+
+const msg =
+  document.getElementById("msg");
+
+const refCount =
+  document.getElementById("refCount");
+
+const refLink =
+  document.getElementById("refLink");
+
+
+/* UPDATE UI */
+
+function update(){
+
+  const p =
+    Math.min(
+      taps / MAX_TAPS * 100,
+      100
+    );
+
+  balance.textContent =
+    (taps * PER_TAP).toLocaleString();
+
+  count.textContent =
+    `${taps.toLocaleString()} / ${MAX_TAPS.toLocaleString()} taps`;
+
+  percent.textContent =
+    `${p.toFixed(1)}%`;
+
+  fill.style.width =
+    p + "%";
+
+  refCount.textContent =
+    referrals.toLocaleString();
+
 }
 
-async function saveData() {
-  const user = auth.currentUser;
-  if (!user) return;
+
+/* SAVE FIREBASE */
+
+async function saveData(){
+
+  const user =
+    auth.currentUser;
+
+  if(!user) return;
 
   await setDoc(
-    doc(db, "players", user.uid),
+
+    doc(
+      db,
+      "players",
+      user.uid
+    ),
+
     {
+
       taps: taps,
-      balance: taps * PER_TAP
+
+      balance:
+        taps * PER_TAP,
+
+      referrals:
+        referrals
+
     },
-    { merge: true }
+
+    {
+      merge:true
+    }
+
   );
+
 }
 
-async function loadData() {
-  const user = auth.currentUser;
-  if (!user) return;
 
-  const snap = await getDoc(doc(db, "players", user.uid));
+/* LOAD FIREBASE */
 
-  if (snap.exists()) {
-    const data = snap.data();
-    taps = Number(data.taps || 0);
-    localStorage.setItem("fish_taps", taps);
+async function loadData(){
+
+  const user =
+    auth.currentUser;
+
+  if(!user) return;
+
+  const snap =
+    await getDoc(
+      doc(
+        db,
+        "players",
+        user.uid
+      )
+    );
+
+  if(snap.exists()){
+
+    const data =
+      snap.data();
+
+    taps =
+      Number(data.taps || 0);
+
+    referrals =
+      Number(data.referrals || 0);
+
+    localStorage.setItem(
+      "fish_taps",
+      taps
+    );
+
+    localStorage.setItem(
+      "fish_referrals",
+      referrals
+    );
+
   }
 
   update();
+
 }
 
-document.getElementById("tap").onclick = async () => {
 
-  if (taps >= MAX_TAPS) {
-    msg.textContent = "Tap limit reached!";
-    return;
-  }
+/* REFERRAL LINK */
 
-  taps++;
+function makeReferralLink(uid){
 
-  localStorage.setItem("fish_taps", taps);
+  const base =
+    window.location.origin +
+    window.location.pathname;
 
-  update();
+  return (
+    base +
+    "?ref=" +
+    encodeURIComponent(uid)
+  );
 
-  msg.textContent = "+5 Fish 🐟";
+}
 
-  await saveData();
-};
 
-document.getElementById("reset").onclick = async () => {
-  taps = 0;
+/* TAP */
 
-  localStorage.setItem("fish_taps", taps);
+document.getElementById("tap").onclick =
+  async function(){
 
-  update();
+    if(taps >= MAX_TAPS){
 
-  msg.textContent = "Demo reset.";
+      msg.textContent =
+        "Tap limit reached!";
 
-  await saveData();
-};
+      return;
+
+    }
+
+    taps++;
+
+    localStorage.setItem(
+      "fish_taps",
+      taps
+    );
+
+    update();
+
+    msg.textContent =
+      "+5 Fish 🐟";
+
+    try{
+
+      await saveData();
+
+    }catch(error){
+
+      console.error(error);
+
+    }
+
+  };
+
+
+/* COPY REFERRAL */
+
+document.getElementById("copyRef").onclick =
+  async function(){
+
+    try{
+
+      await navigator.clipboard.writeText(
+        refLink.value
+      );
+
+      msg.textContent =
+        "Referral link copied! 🔗";
+
+    }catch(error){
+
+      refLink.select();
+
+      document.execCommand("copy");
+
+      msg.textContent =
+        "Referral link copied! 🔗";
+
+    }
+
+  };
+
+
+/* RESET */
+
+document.getElementById("reset").onclick =
+  async function(){
+
+    taps = 0;
+
+    localStorage.setItem(
+      "fish_taps",
+      taps
+    );
+
+    msg.textContent =
+      "Demo reset.";
+
+    update();
+
+    try{
+
+      await saveData();
+
+    }catch(error){
+
+      console.error(error);
+
+    }
+
+  };
+
+
+/* LOGIN */
 
 signInAnonymously(auth)
-  .then(() => loadData())
-  .catch((error) => {
+
+  .then(async function(){
+
+    const uid =
+      auth.currentUser.uid;
+
+    refLink.value =
+      makeReferralLink(uid);
+
+    await loadData();
+
+  })
+
+  .catch(function(error){
+
     console.error(error);
-    msg.textContent = "Firebase connection error";
+
+    refLink.value =
+      makeReferralLink("demo");
+
+    msg.textContent =
+      "Firebase connection error";
+
   });
 
+
+/* START */
+
 update();
+
 </script>
+
+</body>
+</html>
